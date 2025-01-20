@@ -33,11 +33,16 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
+
+
+
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "home.apps.HomeConfig",  # We will address the app.py class as the django standards suggests.
+    # We will address the app.py class as the django standards suggests.
+    "home.apps.HomeConfig",
+    "accounts.apps.AccountsConfig",
 ]
 
 MIDDLEWARE = [
