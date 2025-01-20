@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>Register user</h2>
-    # col-md-6 is a bootsrap class to reduce the width of the form fields
+    {% comment %} # col-md-6 is a bootsrap class to reduce the width of the form fields {% endcomment %}
     <form method="post" class="col-md-6">
         {% csrf_token %}
         {{ form.as_p }}
