@@ -127,3 +127,13 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# This setting is for the setting the default login url for django
+# if the User management app is not named as accounts then we can set the login url here
+# this used by "mixin" classes in the views.py
+# LOGIN_URL = "accounts:user_login"
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.authenticate.EmailBackend',
+]
