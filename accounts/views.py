@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from .forms import UserRegisterForm, UserLoginForm
@@ -60,3 +60,12 @@ class UserLoginView(View):
                     'Invalid username or password',
                     extra_tags='alert alert-danger')
         return render(request, self.template_name, {'form': form})
+
+
+class UserLogoutView(View):
+    def get(self, request):
+        logout(request)  # the user is in the request object
+        messages.success(
+            request, 'Logout successful',
+            extra_tags='alert alert-success')
+        return redirect('home:home')

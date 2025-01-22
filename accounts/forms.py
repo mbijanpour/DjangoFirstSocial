@@ -18,6 +18,11 @@ class UserRegisterForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data['email']
+        """
+        The blow query is lazy which means that Djnago wont execute the query until
+        the result are "Used" which again means that you used the result in a condition,
+        a loop or slicing. only then django executes the query.
+        """
         if email and User.objects.filter(email=email).exists():
             raise ValidationError('Email already exists')
         return email
