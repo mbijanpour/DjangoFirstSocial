@@ -88,3 +88,11 @@ class UserLogoutView(LoginRequiredMixin, View):
             request, 'Logout successful',
             extra_tags='alert alert-success')
         return redirect('home:home')
+
+
+class UserProfileView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        print("request=>", request)
+        # the pk look for the primary key in the database wether its id or something else
+        user = User.objects.get(pk=user_id)
+        return render(request, 'accounts/profile.html', {'user': user})
