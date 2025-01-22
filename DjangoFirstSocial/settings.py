@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # We will address the app.py class as the django standards suggests.
     "home.apps.HomeConfig",
     "accounts.apps.AccountsConfig",
+    "posts.apps.PostsConfig",
 ]
 
 MIDDLEWARE = [

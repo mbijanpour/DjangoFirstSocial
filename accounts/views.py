@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from .forms import UserRegisterForm, UserLoginForm
+from posts.models import Post
 
 
 class UserRegisterView(View):
@@ -95,4 +96,5 @@ class UserProfileView(LoginRequiredMixin, View):
         print("request=>", request)
         # the pk look for the primary key in the database wether its id or something else
         user = User.objects.get(pk=user_id)
-        return render(request, 'accounts/profile.html', {'user': user})
+        posts = Post.objects.filter(user=user)
+        return render(request, 'accounts/profile.html', {'user': user, 'posts': posts})
