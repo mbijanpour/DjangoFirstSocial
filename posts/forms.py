@@ -3,7 +3,7 @@ from django import forms
 from . import models
 
 
-class PostUpdateForm(forms.ModelForm):
+class PostCreateUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Post
         fields = ('slug', 'body')

@@ -19,6 +19,10 @@
         </div>
     </div>
 
+    {% if request.user.id == user.id %}
+    <a href="{% url "posts:post_create" %}" class="btn btn-primary">Create</a>
+    {% endif %}
+
 {% endblock content %}
 
 

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils.text import slugify
 
 from .models import Post
-from .forms import PostUpdateForm
+from .forms import PostCreateUpdateForm
 
 
 class PostDetailView(View):
@@ -35,7 +35,7 @@ class PostDeleteView(LoginRequiredMixin, View):
 
 
 class PostUpdateView(LoginRequiredMixin, View):
-    form_class = PostUpdateForm
+    form_class = PostCreateUpdateForm
 
     def setup(self, request, *args, **kwargs):
         """
@@ -77,3 +77,23 @@ class PostUpdateView(LoginRequiredMixin, View):
                 request, 'Post could not be updated',
                 extra_tags='alert alert-danger')
             return render(request, 'posts/update.html', {'form': form})
+
+
+class PostCreateView(LoginRequiredMixin, View):
+    form_class = PostCreateUpdateForm
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, 'posts/create.html', {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid:
+            new_post = form.save(commit=False)
+            new_post.user = request.user
+            new_post.slug = slugify(new_post.slug)
+            new_post.save()
+            messages.success(
+                request, 'Post created successfully',
+                extra_tags='alert alert-success')
+            return redirect('posts:post_detail', new_post.id, new_post.slug)
