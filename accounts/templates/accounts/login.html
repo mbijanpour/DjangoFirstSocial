@@ -6,7 +6,7 @@
     <form method="post" class="col-md-6" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" value="Login">Register</button>
+        <button class="btn btn-primary" type="submit" value="Login">Register</button>
     </form>
 
 {% endblock content %}

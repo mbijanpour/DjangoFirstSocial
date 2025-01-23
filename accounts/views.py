@@ -43,7 +43,7 @@ class UserRegisterView(View):
                 extra_tags='alert alert-success')
             return redirect('home:home')
         # if the form is not valid then it will render the form again but with the error messages
-        # on the fields it needs (the browesr validation is off from the register html)
+        # on the fields it needs (the browser validation is off from the register html)
         # the passed form is the form with the error messages
         return render(request, self.template_name, {'form': form})
 

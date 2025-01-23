@@ -1,15 +1,15 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
   <div class="container-fluid">
       <div class="navbar-nav">
-        <a class="nav-link active" href="{% url "home:home" %}">Home</a>
+        <a class="nav-link active fw-bold" href="{% url "home:home" %}" style="color:rgb(60, 60, 60);">Home</a>
         {% if request.user.is_authenticated %}
         {% comment %} request.user.id is to pass the user id within the request to the view which is used to render the profile page {% endcomment %}
-        <a class="nav-link active" href="{% url "accounts:user_profile" request.user.id %}">profile</a>
-        <a class="nav-link active" href="{% url "accounts:user_logout" %}">Logout</a>
+        <a class="nav-link active fw-bold" href="{% url "accounts:user_profile" request.user.id %}" style="color:rgb(60, 60, 60);">Profile</a>
+        <a class="nav-link active fw-bold" href="{% url "accounts:user_logout" %}" style="color:rgb(60, 60, 60);">Logout</a>
         {% else %}
-        <a class="nav-link active" href="{% url "accounts:user_register" %}">Register</a>
-        <a class="nav-link active" href="{% url "accounts:user_login" %}">Login</a>
+        <a class="nav-link active fw-bold" href="{% url "accounts:user_register" %}" style="color:rgb(60, 60, 60);">Register</a>
+        <a class="nav-link active fw-bold" href="{% url "accounts:user_login" %}" style="color:rgb(60, 60, 60);">Login</a>
         {% endif %}
       </div>
     </div>
-</nav>
+</nav> 
