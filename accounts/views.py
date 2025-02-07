@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import views as auth_views
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 from .forms import UserRegisterForm, UserLoginForm
 from posts.models import Post
@@ -95,6 +97,26 @@ class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         print("request=>", request)
         # the pk look for the primary key in the database wether its id or something else
-        user = User.objects.get(pk=user_id)
+        user = get_object_or_404(User, pk=user_id)
         posts = Post.objects.filter(user=user)
         return render(request, 'accounts/profile.html', {'user': user, 'posts': posts})
+
+
+class UserPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'accounts/password_reset_form.html'
+    # we wait for the evaluation to complete so we use lazy
+    success_url = reverse_lazy('accounts:password_reset_done')
+    email_template_name = 'accounts/password_reset_email.html'
+
+
+class UserPasswordResetDone(auth_views.PasswordChangeDoneView):
+    template_name = 'accounts/password_reset_done.html'
+
+
+class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'accounts/password_reset_confirm.html'
+    success_url = reverse_lazy('accounts:password_reset_complete')
+
+
+class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'accounts/password_reset_complete.html'
