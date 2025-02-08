@@ -98,7 +98,8 @@ class UserProfileView(LoginRequiredMixin, View):
         print("request=>", request)
         # the pk look for the primary key in the database wether its id or something else
         user = get_object_or_404(User, pk=user_id)
-        posts = Post.objects.filter(user=user)
+        # posts = Post.objects.filter(user=user)
+        posts = user.posts.all()  # with related_name
         return render(request, 'accounts/profile.html', {'user': user, 'posts': posts})
 
 
