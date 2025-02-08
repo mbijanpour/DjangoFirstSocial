@@ -1,10 +1,14 @@
 {
-    "cSpell.words": [
-        "endcomment",
-        "endfor",
-        "novalidate",
-        "truncatewords",
-        "uidb",
-        "unfollow"
-    ]
+  "cSpell.words": [
+    "endcomment",
+    "endfor",
+    "novalidate",
+    "pcomment",
+    "rcomment",
+    "timesince",
+    "truncatewords",
+    "ucomment",
+    "uidb",
+    "unfollow"
+  ]
 }

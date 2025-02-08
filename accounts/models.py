@@ -4,9 +4,11 @@ from django.db import models
 
 class Relation(models.Model):
     from_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='follower')
+        User, on_delete=models.CASCADE, related_name="follower"
+    )
     to_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='following')
+        User, on_delete=models.CASCADE, related_name="following"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

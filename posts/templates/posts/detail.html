@@ -4,12 +4,15 @@
 
     <div class='card'>
         <div class='card-header'>
-            <a href="{% url "accounts:user_profile" post.user.id %}" class="card-title"
+            {% comment %} <a href="{% url "accounts:user_profile" post.user.id %}" class="card-title"
             style="font-size: 1.5em; color: blue; font-weight: bold; text-decoration: none;">
                 {{ post.user.username }}
-            </a>
+            </a> {% endcomment %}
             {% comment %} <h3 class="card-title">{{ post.user.username }}</h3>s {% endcomment %}
-            <h3 class="card-subtitle mb-2 text-muted">{{ post.slug }}</h3> - <small class="text-muted">{{ post.updated_at|date:"Y M D" }}</small>
+            <h3 class="card-subtitle mb-2 text-muted"> {{ post.slug }} </h3> 
+            <a href="{% url 'accounts:user_profile' post.user.id %}" class="text-primary" style="text-decoration: none;">
+            {{ post.user.username }}
+            </a> - <small class="text-muted">{{ post.updated_at|date:"Y M D" }}</small>
         </div>
         <div class='card-body'>
             <p>{{ post.body }}</p>
@@ -19,6 +22,26 @@
     {% if request.user.id == post.user.id %}
     <a href="{% url "posts:post_delete" post.id %}" class="btn btn-danger btn-primary">Delete</a>
     <a href="{% url "posts:post_update" post.id %}" class="btn btn-update btn-primary">update</a>
-    {% endif %}
+    {% endif %} <br>
+
+    {% for comment in comments %}
+
+    <h3 class="card-subtitle mb-2 text-muted"> comments </h3> 
+    <div class="card mb-3">
+        <div class="card-header">
+            <a href="{% url 'accounts:user_profile' comment.user.id %}" class="text-primary" style="text-decoration: none;">
+                {{ comment.user.username }}
+            </a> - <small class="text-muted">{{ comment.created_at|timesince }}</small>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ comment.body }}</p>
+        </div>
+    </div>
+
+    {% empty %}
+
+    <p class="text-muted">No comments yet!</p>
+
+    {% endfor %}
 
 {% endblock %}

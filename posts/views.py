@@ -6,12 +6,14 @@ from django.utils.text import slugify
 
 from .models import Post
 from .forms import PostCreateUpdateForm
+from home.models import Comment
 
 
 class PostDetailView(View):
     def get(self, request, post_id, post_slug):
         post = get_object_or_404(Post, pk=post_id, slug=post_slug)
-        return render(request, 'posts/detail.html', {'post': post})
+        comments = post.pcomment.filter(is_reply=False)
+        return render(request, "posts/detail.html", {"post": post, "comments": comments})
 
 
 class PostDeleteView(LoginRequiredMixin, View):
@@ -21,17 +23,23 @@ class PostDeleteView(LoginRequiredMixin, View):
             try:
                 post.delete()
                 messages.success(
-                    request, 'Post deleted successfully',
-                    extra_tags='alert alert-success')
+                    request,
+                    "Post deleted successfully",
+                    extra_tags="alert alert-success",
+                )
             except:
                 messages.error(
-                    request, 'Post could not be deleted',
-                    extra_tags='alert alert-danger')
+                    request,
+                    "Post could not be deleted",
+                    extra_tags="alert alert-danger",
+                )
         else:
             messages.error(
-                request, 'You are not allowed to delete this post',
-                extra_tags='alert alert-danger')
-        return redirect('home:home')
+                request,
+                "You are not allowed to delete this post",
+                extra_tags="alert alert-danger",
+            )
+        return redirect("home:home")
 
 
 class PostUpdateView(LoginRequiredMixin, View):
@@ -44,22 +52,25 @@ class PostUpdateView(LoginRequiredMixin, View):
         in order to reduce the times we connect to the db.
         """
         self.post_instance = get_object_or_404(
-            Post, pk=kwargs['post_id'])  # we store post in self to have access to it from different methods
+            Post, pk=kwargs["post_id"]
+        )  # we store post in self to have access to it from different methods
         return super().setup(request, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):
         post = self.post_instance
         if not post.user.id == request.user.id:
             messages.error(
-                request, 'You are not allowed to update this post',
-                extra_tags='alert alert-danger')
-            return redirect('home:home')
+                request,
+                "You are not allowed to update this post",
+                extra_tags="alert alert-danger",
+            )
+            return redirect("home:home")
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, post_id):
         post = self.post_instance
         form = self.form_class(instance=post)
-        return render(request, 'posts/update.html', {'form': form})
+        return render(request, "posts/update.html", {"form": form})
 
     def post(self, request, post_id):
         post = self.post_instance
@@ -69,14 +80,14 @@ class PostUpdateView(LoginRequiredMixin, View):
             updated_post.slug = slugify(updated_post.slug)
             updated_post.save()
             messages.success(
-                request, 'Post updated successfully',
-                extra_tags='alert alert-success')
-            return redirect('posts:post_detail', post_id=post.id, post_slug=post.slug)
+                request, "Post updated successfully", extra_tags="alert alert-success"
+            )
+            return redirect("posts:post_detail", post_id=post.id, post_slug=post.slug)
         else:
             messages.error(
-                request, 'Post could not be updated',
-                extra_tags='alert alert-danger')
-            return render(request, 'posts/update.html', {'form': form})
+                request, "Post could not be updated", extra_tags="alert alert-danger"
+            )
+            return render(request, "posts/update.html", {"form": form})
 
 
 class PostCreateView(LoginRequiredMixin, View):
@@ -84,7 +95,7 @@ class PostCreateView(LoginRequiredMixin, View):
 
     def get(self, request):
         form = self.form_class()
-        return render(request, 'posts/create.html', {'form': form})
+        return render(request, "posts/create.html", {"form": form})
 
     def post(self, request):
         form = self.form_class(request.POST)
@@ -94,6 +105,6 @@ class PostCreateView(LoginRequiredMixin, View):
             new_post.slug = slugify(new_post.slug)
             new_post.save()
             messages.success(
-                request, 'Post created successfully',
-                extra_tags='alert alert-success')
-            return redirect('posts:post_detail', new_post.id, new_post.slug)
+                request, "Post created successfully", extra_tags="alert alert-success"
+            )
+            return redirect("posts:post_detail", new_post.id, new_post.slug)

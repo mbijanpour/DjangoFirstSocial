@@ -33,9 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
-
-
-
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
@@ -135,15 +132,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # LOGIN_URL = "accounts:user_login"
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'accounts.authenticate.EmailBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "accounts.authenticate.EmailBackend",
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mahanbijanpour@gmail.com'
-EMAIL_HOST_PASSWORD = 'cfrgzxjaryflulbf'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = "mahanbijanpour@gmail.com"
+EMAIL_HOST_PASSWORD = "cfrgzxjaryflulbf"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = 'mbijanpour'
+DEFAULT_FROM_EMAIL = "mbijanpour"
