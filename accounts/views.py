@@ -61,6 +61,10 @@ class UserLoginView(View):
             return redirect('home:home')
         return super().dispatch(request, *args, **kwargs)
 
+    def setup(self, request, *args, **kwargs):
+        self.next = request.GET.get('next')
+        return super().setup(request, *args, **kwargs)
+
     def get(self, request):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
@@ -76,6 +80,8 @@ class UserLoginView(View):
                 messages.success(
                     request, 'Login successful',
                     extra_tags='alert alert-success')
+                if self.next:
+                    return redirect(self.next)
                 return redirect('home:home')
             else:
                 messages.error(
