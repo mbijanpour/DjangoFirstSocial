@@ -53,7 +53,7 @@ class UserRegisterView(View):
 
 class UserLoginView(View):
     form_class = UserLoginForm
-    template_name = 'accounts\login.html'
+    template_name = 'accounts/login.html'
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
