@@ -4,6 +4,12 @@
 
     <h2 class="text-center"> {{user.username}} </h2>
 
+    {% if request.user.id != user.id and not is_following %}
+    <a href="{% url "accounts:user_follow" user.id %}" class="btn btn-primary">follow</a>
+    {% elif request.user.id != user.id and is_following %}
+    <a href="{% url "accounts:user_unfollow" user.id %}" class="btn btn-danger">unfollow</a>
+    {% endif %}
+
     <div class='card'>
         <div class='card-header'>
             <h2>Latest Posts</h2>

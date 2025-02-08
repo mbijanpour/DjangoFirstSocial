@@ -3,6 +3,8 @@
         "endcomment",
         "endfor",
         "novalidate",
-        "truncatewords"
+        "truncatewords",
+        "uidb",
+        "unfollow"
     ]
 }

@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 
 from .forms import UserRegisterForm, UserLoginForm
 from posts.models import Post
+from .models import Relation
 
 
 class UserRegisterView(View):
@@ -95,12 +96,17 @@ class UserLogoutView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
+        is_following = False
         print("request=>", request)
         # the pk look for the primary key in the database wether its id or something else
         user = get_object_or_404(User, pk=user_id)
         # posts = Post.objects.filter(user=user)
         posts = user.posts.all()  # with related_name
-        return render(request, 'accounts/profile.html', {'user': user, 'posts': posts})
+        relation = Relation.objects.filter(
+            from_user=request.user, to_user=user)
+        if relation.exists():
+            is_following = True
+        return render(request, 'accounts/profile.html', {'user': user, 'posts': posts, 'is_following': is_following})
 
 
 class UserPasswordResetView(auth_views.PasswordResetView):
@@ -121,3 +127,29 @@ class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
+
+
+class UserFollowView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        relation = Relation.objects.filter(
+            from_user=request.user, to_user=user).exists()
+        if relation:
+            messages.warning(request, 'You have already followed this user!')
+        else:
+            Relation.objects.create(from_user=request.user, to_user=user)
+            messages.success(request, "You have followed this user.")
+        return redirect('accounts:user_profile', user_id)
+
+
+class UserUnfollowView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user = get_object_or_404(User, pk=user_id)
+        relation = Relation.objects.filter(
+            from_user=request.user, to_user=user)
+        if relation.exists():
+            relation.delete()
+            messages.success(request, "You unfollow this user.")
+        else:
+            messages.warning(request, "You didn't follow this user.")
+        return redirect('accounts:user_profile', user_id)
