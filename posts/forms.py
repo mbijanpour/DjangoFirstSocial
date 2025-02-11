@@ -23,3 +23,14 @@ class CommentCreateForm(forms.ModelForm):
                                           'rows': 3,
                                           'placeholder': 'Write your comment here'})
         }
+
+
+class CommentReplyForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("body",)
+        widgets = {
+            "body": forms.Textarea(attrs={'class': 'form-control',
+                                          'rows': 2,
+                                          'placeholder': 'Write your Reply here'})
+        }

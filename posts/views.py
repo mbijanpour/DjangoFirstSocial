@@ -7,12 +7,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from .models import Post
-from .forms import PostCreateUpdateForm, CommentCreateForm
+from .forms import PostCreateUpdateForm, CommentCreateForm, CommentReplyForm
 from home.models import Comment
 
 
 class PostDetailView(View):
     form_class = CommentCreateForm
+    from_class_reply = CommentReplyForm
 
     def setup(self, request, *args, **kwargs):
         # the parameters which passed in the url will save in kwargs
@@ -24,7 +25,7 @@ class PostDetailView(View):
     def get(self, request, *args, **kwargs):
         # post = get_object_or_404(Post, pk=post_id, slug=post_slug)
         comments = self.post_instance.pcomment.filter(is_reply=False)
-        return render(request, "posts/detail.html", {"post": self.post_instance, "comments": comments, "form": self.form_class})
+        return render(request, "posts/detail.html", {"post": self.post_instance, "comments": comments, "form": self.form_class, "reply_form": self.from_class_reply})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -131,3 +132,24 @@ class PostCreateView(LoginRequiredMixin, View):
                 request, "Post created successfully", extra_tags="alert alert-success"
             )
             return redirect("posts:post_detail", new_post.id, new_post.slug)
+
+
+class PostAddReplyView(LoginRequiredMixin, View):
+    form_class = CommentReplyForm
+
+    def post(self, request, post_id, comment_id):
+        post = get_object_or_404(Post, pk=post_id)
+        comment = get_object_or_404(Comment, id=comment_id)
+        # print(comment)
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            new_reply = form.save(commit=False)
+            new_reply.user = request.user
+            new_reply.post = post
+            new_reply.reply = comment
+            new_reply.is_reply = True
+            new_reply.save()
+            messages.success(
+                request, "reply submitted successfully", extra_tags="alert alert-success"
+            )
+        return redirect('posts:post_detail', post_id, post.slug)
