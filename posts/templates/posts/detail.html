@@ -24,9 +24,10 @@
     <a href="{% url "posts:post_update" post.id %}" class="btn btn-update btn-primary">update</a>
     {% endif %} <br>
 
+    <h3 class="card-subtitle mb-2 text-muted"> comments </h3> 
+
     {% for comment in comments %}
 
-    <h3 class="card-subtitle mb-2 text-muted"> comments </h3> 
     <div class="card mb-3">
         <div class="card-header">
             <a href="{% url 'accounts:user_profile' comment.user.id %}" class="text-primary" style="text-decoration: none;">
@@ -43,5 +44,19 @@
     <p class="text-muted">No comments yet!</p>
 
     {% endfor %}
+
+    {% if request.user.is_authenticated %}
+        {% if request.user.id != post.user.id %}
+            <form method="POST" class="mt-4">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+        {% else %}
+            <p class="alert alert-danger">Authors can't comment on their own posts.</p>
+        {% endif %}
+    {% else %}
+        <p class="alert alert-danger">You must be logged in to comment.</p>
+    {% endif %}
 
 {% endblock %}
