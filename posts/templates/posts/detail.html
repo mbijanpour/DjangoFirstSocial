@@ -17,6 +17,7 @@
     {% if request.user.id == post.user.id %}
     <a href="{% url 'posts:post_delete' post.id %}" class="btn btn-danger btn-primary">Delete</a>
     <a href="{% url 'posts:post_update' post.id %}" class="btn btn-update btn-primary">Update</a>
+    <a href="{% url 'posts:post_like' post.id %}" class="{% if can_like %} disabled {% endif %} btn btn-primary">Like {{post.like_count}}</a>
     {% endif %} <br>
 
     <h3 class="card-subtitle mb-2 text-muted">Comments</h3>
@@ -47,11 +48,11 @@
     </div>
 
     {% if request.user.is_authenticated %}
-            <form action="{% url 'posts:add_reply' post.id comment.id %}" method="POST" class="mt-4">
-                {% csrf_token %}
-                {{ reply_form.as_p }}
-                <button type="submit" class="btn btn-primary">Reply</button>
-            </form> <br/>
+        <form action="{% url 'posts:add_reply' post.id comment.id %}" method="POST" class="mt-4">
+            {% csrf_token %}
+            {{ reply_form.as_p }}
+            <button type="submit" class="btn btn-primary">Reply</button>
+        </form> <br/>
     {% endif %}
 
     {% empty %}

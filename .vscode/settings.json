@@ -4,11 +4,13 @@
     "endfor",
     "novalidate",
     "pcomment",
+    "pvotes",
     "rcomment",
     "timesince",
     "truncatewords",
     "ucomment",
     "uidb",
-    "unfollow"
+    "unfollow",
+    "uvotes"
   ]
 }
