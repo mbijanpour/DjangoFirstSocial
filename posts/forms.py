@@ -19,9 +19,13 @@ class CommentCreateForm(forms.ModelForm):
         model = Comment
         fields = ("body",)
         widgets = {
-            "body": forms.Textarea(attrs={'class': 'form-control',
-                                          'rows': 3,
-                                          'placeholder': 'Write your comment here'})
+            "body": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Write your comment here",
+                }
+            )
         }
 
 
@@ -30,7 +34,11 @@ class CommentReplyForm(forms.ModelForm):
         model = Comment
         fields = ("body",)
         widgets = {
-            "body": forms.Textarea(attrs={'class': 'form-control',
-                                          'rows': 2,
-                                          'placeholder': 'Write your Reply here'})
+            "body": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 2,
+                    "placeholder": "Write your Reply here",
+                }
+            )
         }

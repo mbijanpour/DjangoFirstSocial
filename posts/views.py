@@ -19,21 +19,29 @@ class PostDetailView(View):
         # the parameters which passed in the url will save in kwargs
         # we set it to post instance so that django wont confuse it with model Post
         self.post_instance = get_object_or_404(
-            Post, pk=kwargs['post_id'], slug=kwargs['post_slug'])
+            Post, pk=kwargs["post_id"], slug=kwargs["post_slug"]
+        )
         return super().setup(self, request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         # post = get_object_or_404(Post, pk=post_id, slug=post_slug)
         comments = self.post_instance.pcomment.filter(is_reply=False)
         can_like = False
-        if request.user.is_authenticated and self.post_instance.user_can_like(request.user):
+        if request.user.is_authenticated and self.post_instance.user_can_like(
+            request.user
+        ):
             can_like = True
-        return render(request, "posts/detail.html",
-                      {"post": self.post_instance,
-                       "comments": comments,
-                       "form": self.form_class,
-                       "reply_form": self.from_class_reply,
-                       "can_like": can_like})
+        return render(
+            request,
+            "posts/detail.html",
+            {
+                "post": self.post_instance,
+                "comments": comments,
+                "form": self.form_class,
+                "reply_form": self.from_class_reply,
+                "can_like": can_like,
+            },
+        )
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -43,9 +51,10 @@ class PostDetailView(View):
             new_comment.user = request.user
             new_comment.post = self.post_instance
             new_comment.save()
-            messages.success(
-                request, "your comment submitted successfully.", 'success')
-            return redirect('posts:post_detail', self.post_instance.id, self.post_instance.slug)
+            messages.success(request, "your comment submitted successfully.", "success")
+            return redirect(
+                "posts:post_detail", self.post_instance.id, self.post_instance.slug
+            )
 
 
 class PostDeleteView(LoginRequiredMixin, View):
@@ -158,9 +167,11 @@ class PostAddReplyView(LoginRequiredMixin, View):
             new_reply.is_reply = True
             new_reply.save()
             messages.success(
-                request, "reply submitted successfully", extra_tags="alert alert-success"
+                request,
+                "reply submitted successfully",
+                extra_tags="alert alert-success",
             )
-        return redirect('posts:post_detail', post_id, post.slug)
+        return redirect("posts:post_detail", post_id, post.slug)
 
 
 class PostLikeView(LoginRequiredMixin, View):
@@ -169,8 +180,11 @@ class PostLikeView(LoginRequiredMixin, View):
         vote = Vote.objects.filter(post=post, user=request.user)
         if vote.exists():
             messages.error(
-                request, "You have already liked this post", extra_tags="alert alert-danger")
+                request,
+                "You have already liked this post",
+                extra_tags="alert alert-danger",
+            )
         else:
             Vote(user=request.user, post=post).save()
             messages.success(request, "You liked this post.")
-        return redirect('posts:post_detail', post.id, post.slug)
+        return redirect("posts:post_detail", post.id, post.slug)

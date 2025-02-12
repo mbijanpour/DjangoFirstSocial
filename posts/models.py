@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 
 
 class Post(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="posts")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     slug = models.SlugField(max_length=200, unique=True)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,10 +31,8 @@ class Post(models.Model):
 
 
 class Vote(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="uvotes")
-    post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="pvotes")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="uvotes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="pvotes")
 
     def __str__(self):
         return f"User {self.user.username} Likes Post {self.post.slug}"

@@ -85,7 +85,11 @@ class ProfileEditForm(forms.ModelForm):
         model = Profile
         fields = ("bio",)
         widgets = {
-            "body": forms.TextInput(attrs={'class': 'form-control',
-                                           'rows': 3,
-                                           'placeholder': 'This is your bio'})
+            "body": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "This is your bio",
+                }
+            )
         }
