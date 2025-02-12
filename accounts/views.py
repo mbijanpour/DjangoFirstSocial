@@ -7,7 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.urls import reverse_lazy
 
-from .forms import UserRegisterForm, UserLoginForm
+from .forms import UserRegisterForm, UserLoginForm, ProfileEditForm
 from posts.models import Post
 from .models import Relation
 
@@ -97,7 +97,8 @@ class UserLoginView(View):
 class UserLogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)  # the user is in the request object
-        messages.success(request, "Logout successful", extra_tags="alert alert-success")
+        messages.success(request, "Logout successful",
+                         extra_tags="alert alert-success")
         return redirect("home:home")
 
 
@@ -109,7 +110,8 @@ class UserProfileView(LoginRequiredMixin, View):
         user = get_object_or_404(User, pk=user_id)
         # posts = Post.objects.filter(user=user)
         posts = user.posts.all()  # with related_name
-        relation = Relation.objects.filter(from_user=request.user, to_user=user)
+        relation = Relation.objects.filter(
+            from_user=request.user, to_user=user)
         if relation.exists():
             is_following = True
         return render(
@@ -156,10 +158,30 @@ class UserFollowView(LoginRequiredMixin, View):
 class UserUnfollowView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         user = get_object_or_404(User, pk=user_id)
-        relation = Relation.objects.filter(from_user=request.user, to_user=user)
+        relation = Relation.objects.filter(
+            from_user=request.user, to_user=user)
         if relation.exists():
             relation.delete()
             messages.success(request, "You unfollow this user.")
         else:
             messages.warning(request, "You didn't follow this user.")
         return redirect("accounts:user_profile", user_id)
+
+
+class EditUserView(LoginRequiredMixin, View):
+    form_class = ProfileEditForm
+
+    def get(self, request):
+        form = self.form_class(instance=request.user.profile, initial={
+                               "email": request.user.email})
+        return render(request, "accounts/edit_profile.html", {"form": form})
+
+    def post(self, request):
+        form = self.form_class(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            request.user.email = form.cleaned_data['email']
+            request.user.save()
+            messages.success(
+                request, "your profile has been edited successfully", extra_tags='success')
+        return redirect('accounts:user_profile', request.user.id)

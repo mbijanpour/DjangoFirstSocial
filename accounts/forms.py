@@ -2,6 +2,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
+from .models import Profile
+
 
 class UserRegisterForm(forms.Form):
     username = forms.CharField(
@@ -14,9 +16,9 @@ class UserRegisterForm(forms.Form):
             attrs={"class": "form-control", "placeholder": "johnDoe@gmail.com"}
         )
     )
-    # the wiget is used to hide the passwor
+    # the widget is used to hide the password
     # the attrs is used to add a class to the input field
-    # this is for html/css classes hwich used to add a bootstrap class to the input field
+    # this is for html/css classes which used to add a bootstrap class to the input field
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
@@ -33,7 +35,7 @@ class UserRegisterForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data["email"]
         """
-        The blow query is lazy which means that Djnago wont execute the query until
+        The blow query is lazy which means that Django wont execute the query until
         the result are "Used" which again means that you used the result in a condition,
         a loop or slicing. only then django executes the query.
         """
@@ -68,3 +70,22 @@ class UserLoginForm(forms.Form):
             attrs={"class": "form-control", "placeholder": "your password"}
         )
     )
+
+
+class ProfileEditForm(forms.ModelForm):
+    email = forms.EmailField(
+        label="Email",
+        required=False,
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "johnDoe@gmail.com"}
+        ),
+    )
+
+    class Meta:
+        model = Profile
+        fields = ("bio",)
+        widgets = {
+            "body": forms.TextInput(attrs={'class': 'form-control',
+                                           'rows': 3,
+                                           'placeholder': 'This is your bio'})
+        }

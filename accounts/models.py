@@ -13,3 +13,8 @@ class Relation(models.Model):
 
     def __str__(self):
         return f"{self.from_user} followed {self.to_user} at {self.created_at}"
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField()
