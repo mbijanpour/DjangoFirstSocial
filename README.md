@@ -115,6 +115,6 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For inquiries, please contact me at [your-email@example.com].
+For inquiries, please contact me at [mahanbijanpour@example.com].
 
 Thank you for checking out DjangoFirstSocial! 🚀
